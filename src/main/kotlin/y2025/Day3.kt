@@ -31,7 +31,7 @@ class Day3 {
         val joltage = lines.sumOf {
             var batteries = it
             (0 until numBatteries).fold(0L) { acc, i ->
-                val maxValue = batteries.substring(0, batteries.length - (numBatteries - 1 - i)).max()
+                val maxValue = batteries.take(batteries.length - (numBatteries - 1 - i)).max()
                 batteries = batteries.substringAfter(maxValue)
                 acc * 10 + maxValue.toString().toInt()
             }
