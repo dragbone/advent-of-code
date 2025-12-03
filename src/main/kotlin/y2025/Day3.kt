@@ -29,18 +29,12 @@ class Day3 {
         val lines = getLines("y2025/d3.txt", stripBlank = true)
         val numBatteries = 12
         val joltage = lines.sumOf {
-            var batteries = it.map { it.toString().toInt() }
-            require(batteries.size >= numBatteries)
-            val selected = mutableListOf<Int>()
-            while (selected.size < numBatteries) {
-                val choices = batteries.take(batteries.size - (numBatteries - 1 - selected.size))
-                val max = choices.max()
-                selected.add(max)
-                val i = batteries.indexOf(max)
-                batteries = batteries.drop(i + 1)
+            var batteries = it
+            (0 until numBatteries).fold(0L) { acc, i ->
+                val maxValue = batteries.substring(0, batteries.length - (numBatteries - 1 - i)).max()
+                batteries = batteries.substringAfter(maxValue)
+                acc * 10 + maxValue.toString().toInt()
             }
-            require(selected.size == numBatteries)
-            selected.fold(0L) { acc, i -> acc * 10 + i }
         }
         println(joltage)
     }
