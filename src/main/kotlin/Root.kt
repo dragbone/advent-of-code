@@ -12,6 +12,20 @@ fun String.lines(stripBlank: Boolean = false): Sequence<String> = this.lineSeque
     }
 }
 
+fun String.groupedLines(): Sequence<List<String>> = sequence {
+    var lines = mutableListOf<String>()
+    this@groupedLines.lineSequence().forEach { line ->
+        if (line.isBlank()) {
+            if (lines.isNotEmpty()) {
+                yield(lines)
+                lines = mutableListOf()
+            }
+        } else {
+            lines.add(line)
+        }
+    }
+}
+
 fun getLines(file: String, stripBlank: Boolean = false): Sequence<String> {
     return Root::class.java.getResource(file)!!.readText().lines(stripBlank)
 }
