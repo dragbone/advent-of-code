@@ -1,30 +1,26 @@
 package y2024
 
+import Day
 import getLines
 import getText
 import toColumns
 import kotlin.math.abs
 
 fun main() {
-    Day3().run {
-        partOne()
-        partTwo()
-    }
+    Day3().run()
 }
 
-class Day3 {
-    fun partOne() {
-        val text = getText("y2024/d3.txt")
+class Day3 : Day(3, 2025) {
+    override fun part1(text:String): String {
         val matches = Regex("""mul\((\d{1,3}),(\d{1,3})\)""").findAll(text)
         val sum = matches.sumOf {
             it.groupValues[1].toInt() * it.groupValues[2].toInt()
         }
 
-        println("PART 1: $sum")
+        return sum.toString()
     }
 
-    fun partTwo() {
-        val text = getText("y2024/d3.txt")
+    override fun part2(text:String): String {
         val matches = Regex("""mul\((\d{1,3}),(\d{1,3})\)|do\(\)|don't\(\)""").findAll(text)
         var enabled = true
         val sum = matches.sumOf {
@@ -38,6 +34,6 @@ class Day3 {
             0
         }
 
-        println("PART 2: $sum")
+        return sum.toString()
     }
 }

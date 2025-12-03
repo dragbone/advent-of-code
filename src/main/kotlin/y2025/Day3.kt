@@ -1,41 +1,26 @@
 package y2025
 
-import getLines
-import kotlin.time.measureTime
+import Day
+import lines
 
 fun main() {
-    Day3().run {
-        partOne()
-        measureTime {
-            partTwo()
-        }.also { println("Duration: $it") }
-    }
+    Day3().run()
 }
 
-class Day3 {
-    fun partOne() {
-        println("= PART 1 =")
-        val lines = getLines("y2025/d3.txt", stripBlank = true)
-        val joltage = lines.sumOf {
-            val a = it.indexOf(it.substring(0, it.length - 1).maxBy { it })
-            val b = it.indexOf(it.substring(a + 1).maxBy { it })
-            it.substring(a, a + 1).toInt() * 10 + it.substring(b, b + 1).toInt()
-        }
-        println(joltage)
+class Day3 : Day(3, 2025) {
+    override fun part1(text: String): Any = text.lines(stripBlank = true).sumOf {
+        val a = it.indexOf(it.substring(0, it.length - 1).max())
+        val b = it.indexOf(it.substring(a + 1).max())
+        it.substring(a, a + 1).toInt() * 10 + it.substring(b, b + 1).toInt()
     }
 
-    fun partTwo() {
-        println("= PART 2 =")
-        val lines = getLines("y2025/d3.txt", stripBlank = true)
-        val numBatteries = 12
-        val joltage = lines.sumOf {
-            var batteries = it
-            (0 until numBatteries).fold(0L) { acc, i ->
-                val maxValue = batteries.take(batteries.length - (numBatteries - 1 - i)).max()
-                batteries = batteries.substringAfter(maxValue)
-                acc * 10 + maxValue.toString().toInt()
-            }
+    private val numBatteries = 12
+    override fun part2(text: String): Any = text.lines(stripBlank = true).sumOf {
+        var batteries = it
+        (0 until numBatteries).fold(0L) { acc, i ->
+            val maxValue = batteries.take(batteries.length - (numBatteries - 1 - i)).max()
+            batteries = batteries.substringAfter(maxValue)
+            acc * 10 + maxValue.toString().toInt()
         }
-        println(joltage)
     }
 }
