@@ -1,59 +1,51 @@
 package y2025
 
-import getLines
+import Day
 
 fun main() {
-    Day1().run {
-        partOne()
-        partTwo()
-    }
+    Day1().run()
 }
 
-class Day1 {
-    fun partOne() {
-        println("= PART 1 =")
-        val lines = getLines("y2025/d1.txt", stripBlank = true)
+class Day1 : Day(1, 2025) {
+    override fun part1(text: String): Any {
         var dial = 50
         var count = 0
-        lines.forEach {
+        text.lines().forEach {
             when {
                 it.startsWith("L") -> dial -= it.substring(1).toInt()
                 it.startsWith("R") -> dial += it.substring(1).toInt()
             }
-            dial = dial % 100
+            dial %= 100
             if (dial == 0) {
                 count += 1
             }
         }
-        println(count)
+        return count
     }
 
-    fun partTwo() {
-        println("= PART 2 =")
-        val lines = getLines("y2025/d1.txt", stripBlank = true)
+    override fun part2(text: String): Any {
         var dial = 50
         var count = 0
         fun check() {
             if (dial == 0 || dial == 100) {
                 count += 1
             }
-            if (dial < 0) dial += 100
-            if (dial > 99) dial -= 100
+            dial = (dial + 100) % 100
         }
-        lines.forEach {
-            val count = it.substring(1).toInt()
+        text.lines().forEach {
+            val numTurns = it.substring(1).toInt()
             when {
-                it.startsWith("L") -> repeat(count) {
+                it.startsWith("L") -> repeat(numTurns) {
                     dial -= 1
                     check()
                 }
 
-                it.startsWith("R") -> repeat(count) {
+                it.startsWith("R") -> repeat(numTurns) {
                     dial += 1
                     check()
                 }
             }
         }
-        println(count)
+        return count
     }
 }

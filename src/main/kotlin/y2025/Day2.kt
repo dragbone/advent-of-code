@@ -1,20 +1,14 @@
 package y2025
 
-import getLines
+import Day
 
 fun main() {
-    Day2().run {
-        partOne()
-        partTwo()
-    }
+    Day2().run()
 }
 
-class Day2 {
-    fun partOne() {
-        println("= PART 1 =")
-        val lines = getLines("y2025/d2.txt", stripBlank = true)
-        val line = lines.first()
-        val ranges = line.split(",").map { it.split("-").map { it.toLong() } }
+class Day2 : Day(2, 2025) {
+    override fun part1(text: String): Any {
+        val ranges = text.split(",").map { it.split("-").map { it.toLong() } }
         var count = 0L
         ranges.forEach {
             count += (it[0]..it[1])
@@ -23,30 +17,19 @@ class Day2 {
                 .filter { it.substring(0, it.length / 2) == it.substring(it.length / 2) }
                 .sumOf { it.toLong() }
         }
-        println("$count")
+        return count
     }
 
-    fun partTwo() {
-        println("= PART 2 =")
-        val lines = getLines("y2025/d2.txt", stripBlank = true)
-        val line = lines.first()
-        val ranges = line.split(",").map { it.split("-").map { it.toLong() } }
+    override fun part2(text: String): Any {
+        val ranges = text.split(",").map { it.split("-").map { it.toLong() } }
         var count = 0L
-        fun isSilly(input: String): Boolean {
-            return (1..input.length / 2).filter { input.length % it == 0 }.any { cs ->
-                input.chunked(cs).distinct().size == 1
-            }
-        }
+        val regex = Regex("""^(\d+)\1+$""")
         ranges.forEach {
-            println("${it[0]}..${it[1]}")
             count += (it[0]..it[1])
                 .map { it.toString() }
-                .filter { isSilly(it) }
-                .sumOf {
-                    println(" > $it")
-                    it.toLong()
-                }
+                .filter { regex.matchEntire(it) != null }
+                .sumOf { it.toLong() }
         }
-        println("$count")
+        return count
     }
 }

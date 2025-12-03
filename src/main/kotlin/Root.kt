@@ -1,7 +1,7 @@
 class Root
 
 fun getText(file: String): String {
-    return Root::class.java.getResource(file)!!.readText()
+    return Root::class.java.getResource(file)!!.readText().trim('\n')
 }
 
 fun String.lines(stripBlank: Boolean = false): Sequence<String> = this.lineSequence().run {
