@@ -24,6 +24,9 @@ fun String.groupedLines(): Sequence<List<String>> = sequence {
             lines.add(line)
         }
     }
+    if (lines.isNotEmpty()) {
+        yield(lines)
+    }
 }
 
 fun getLines(file: String, stripBlank: Boolean = false): Sequence<String> {
