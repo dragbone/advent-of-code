@@ -2,6 +2,8 @@ package y2025
 
 import Day
 import groupedLines
+import kotlin.math.max
+import kotlin.math.min
 
 fun main() {
     Day5().run()
@@ -18,33 +20,25 @@ class Day5 : Day(5, 2025) {
     }
 
     override fun part2(text: String): Any {
-        val segments = text.groupedLines().toList()
-        val freshIngredientRanges = segments[0]
+        val segments = text.groupedLines()
+        val freshIngredientRanges = segments.first()
             .map { it.split("-").map { it.toLong() } }
             .map { it[0]..it[1] }
 
-        val allFreshIngredients = mutableSetOf<LongRange>()
+        val mergedFreshIngredients = mutableSetOf<LongRange>()
         freshIngredientRanges.forEach { fr ->
-            var workingSet = listOf(fr)
-            allFreshIngredients.forEach { ex ->
-                workingSet = workingSet.flatMap { w ->
-                    sequence {
-                        if (w.start > ex.endInclusive || w.endInclusive < ex.start) {
-                            yield(w)
-                        } else {
-                            if (w.start < ex.start) {
-                                yield(w.start..(ex.start - 1))
-                            }
-                            if (w.endInclusive > ex.endInclusive) {
-                                yield((ex.endInclusive + 1)..w.endInclusive)
-                            }
-                        }
-                    }
+            var thisRange = fr
+            mergedFreshIngredients.removeIf { ex ->
+                if (thisRange.start <= ex.endInclusive && thisRange.endInclusive >= ex.start) {
+                    thisRange = min(thisRange.start, ex.start)..max(thisRange.endInclusive, ex.endInclusive)
+                    true
+                } else {
+                    false
                 }
             }
-            allFreshIngredients.addAll(workingSet)
+            mergedFreshIngredients.add(thisRange)
         }
 
-        return allFreshIngredients.sumOf { it.endInclusive - it.start + 1L }
+        return mergedFreshIngredients.sumOf { it.endInclusive - it.start + 1L }
     }
 }
