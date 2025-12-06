@@ -23,7 +23,39 @@ class Day6 : Day(6, 2025) {
         return sum
     }
 
+    private fun transpose(lines: List<String>): List<String> = StringBuffer().apply {
+        val maxLength = lines.maxOf { it.length }
+        val paddedLines = lines.filter { it.isNotBlank() }.map {
+            it + " ".repeat(maxLength - it.length)
+        }
+        repeat(maxLength) { i ->
+            paddedLines.forEach {
+                append(it[i])
+            }
+            append('\n')
+        }
+    }.toString().lines()
+
     override fun part2(text: String): Any {
-        return 0
+        val cols = transpose(text.lines()).filter { it.isNotBlank() }
+        var operand: Char? = null
+        var sum = 0L
+        var acc = 0L
+        cols.forEach { col ->
+            val value = col.dropLast(1).trim().toLong()
+            if (col.last() != ' ') {
+                operand = col.last()
+                sum += acc
+                acc = value
+            } else {
+                when (operand) {
+                    '*' -> acc *= value
+                    '+' -> acc += value
+                    else -> throw NoWhenBranchMatchedException(col)
+                }
+            }
+        }
+        sum += acc
+        return sum
     }
 }
